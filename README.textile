@@ -1,16 +1,15 @@
-SoftDestroyable
-===============
+h2. SoftDestroyable
 
 Allows one to annotate an ActiveRecord module as being soft_destroyable.
 
-== Why another soft_destroy implementation?
+h3. Why another soft_destroy implementation?
 
 This gem was inspired by "acts_as_paranoid":http://github.com/technoweenie/acts_as_paranoid and
 "rails3_acts_as_paranoid":https://github.com/goncalossilva/rails3_acts_as_paranoid, both of which are great gems.
 I found that rails3_acts_as_paranoid did not handle associations the way I wanted (at least at the time I wrote this),
 so I wrote this implementation instead.   
 
-== Details
+h3. Details
 
 This changes the behavior of the +destroy+ method to become a soft-destroy, which
 will set the +deleted_at+ attribute to <tt>Time.now</tt>, and the +deleted+ attribute to <tt>true</tt>
@@ -37,7 +36,7 @@ Examples:
 
 Author: Michael Kintzer
 
-== Examples
+h3. Examples
 
 * Migrate your model to add +deleted+ and +deleted_at+ attributes.   There are helpers provided for this:
 
@@ -58,12 +57,12 @@ end
 
 * That's it!
 
-== Testing
+h3. Testing
 
 * make sure you have rails and sqlite gems installed.
 * rake test
 
-== Note on Patches/Pull Requests
+h3. Note on Patches/Pull Requests
 
 * Fork the project.
 * Make your feature addition or bug fix.
@@ -73,6 +72,6 @@ end
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request. Bonus points for topic branches.
 
-== Copyright
+h3. Copyright
 
 Copyright (c) 2010-11 Michael Kintzer, released under the MIT license
