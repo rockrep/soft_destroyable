@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{soft_destroyable}
-  s.version = "0.1.3"
+  s.version = "0.1.4"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Kintzer"]
@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
     "README.textile"
   ]
   s.files = [
+    "Gemfile",
     "MIT-LICENSE",
     "README.textile",
     "Rakefile",
@@ -58,16 +59,18 @@ Gem::Specification.new do |s|
     "test/test_helper.rb",
     "test/through_associations_test.rb"
   ]
-  s.add_runtime_dependency "activerecord", "~>3.0"
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
     s.specification_version = 3
 
     if Gem::Version.new(Gem::VERSION) >= Gem::Version.new('1.2.0') then
+      s.add_runtime_dependency(%q<soft_destroyable>, [">= 0"])
     else
+      s.add_dependency(%q<soft_destroyable>, [">= 0"])
     end
   else
- end
+    s.add_dependency(%q<soft_destroyable>, [">= 0"])
+  end
 end
 
