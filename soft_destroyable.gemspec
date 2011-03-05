@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
     "README"
   ]
   s.files = [
+    "Gemfile",
     "MIT-LICENSE",
     "README",
     "Rakefile",
@@ -25,6 +26,8 @@ Gem::Specification.new do |s|
     "lib/soft_destroyable.rb",
     "lib/soft_destroyable/is_soft_destroyable.rb",
     "lib/soft_destroyable/table_definition.rb",
+    "soft_destroyable-0.1.0.gem",
+    "soft_destroyable.gemspec",
     "spec/support/soft_destroy_spec_helper.rb",
     "test/basic_test.rb",
     "test/callback_test.rb",
@@ -70,8 +73,12 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<sqlite3>, [">= 1.3.3"])
       s.add_development_dependency(%q<rails>, [">= 3.0"])
       s.add_development_dependency(%q<sqlite3>, [">= 1.3.3"])
+      s.add_development_dependency(%q<rails>, [">= 3.0"])
+      s.add_development_dependency(%q<sqlite3>, [">= 1.3.3"])
     else
       s.add_dependency(%q<soft_destroyable>, [">= 0"])
+      s.add_dependency(%q<rails>, [">= 3.0"])
+      s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
       s.add_dependency(%q<rails>, [">= 3.0"])
       s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
       s.add_dependency(%q<rails>, [">= 3.0"])
@@ -81,6 +88,8 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<soft_destroyable>, [">= 0"])
+    s.add_dependency(%q<rails>, [">= 3.0"])
+    s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
     s.add_dependency(%q<rails>, [">= 3.0"])
     s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
     s.add_dependency(%q<rails>, [">= 3.0"])
