@@ -1,13 +1,78 @@
 SoftDestroyable
 ===============
 
-Introduction goes here.
+Allows one to annotate an ActiveRecord module as being soft_destroyable.
 
+== Why another soft_destroy implementation?
 
-Example
-=======
+This gem was inspired by <a href='https://github.com/technoweenie/acts_as_paranoid'>acts_as_paranoid</a> and
+<a href='https://github.com/goncalossilva/rails3_acts_as_paranoid'>rails3_acts_as_paranoid</a>, both of which are great gems.
+I found that rails3_acts_as_paranoid did not handle associations the way I wanted (at least at the time I wrote this),
+so I wrote this implementation instead.   
 
-Example goes here.
+== Details
 
+This changes the behavior of the +destroy+ method to become a soft-destroy, which
+will set the +deleted_at+ attribute to <tt>Time.now</tt>, and the +deleted+ attribute to <tt>true</tt>
+It exposes the +revive+ method to reverse the effects of +destroy+.
+It also exposes the +destroy!+ method which can be used to <b>really</b> destroy an object and it's associations.
 
-Copyright (c) 2010 [name of plugin creator], released under the MIT license
+Standard ActiveRecord destroy callbacks are _not_ called, however you can override +before_soft_destroy+, +after_soft_destroy+,
+and +before_destroy!+ on your soft_destroyable models.
+
+Standard ActiveRecord dependent options :destroy, :restrict, :nullify, :delete_all, and :delete are supported and will
+behave as expected.  +revive+ will _not_ undo the effects of +nullify+, +delete_all+, and +delete+.
++restrict+ is _not_ effected by the +deleted?+ state.  In other words, deleted child models will still restrict
+destroying the parent.
+
+The +delete+ operation is _not_ modified by this module.
+
+The operations: +destroy+, +destroy!+, and +revive+ are automatically delegated to the dependent association records.
+in a single transaction.
+
+Scopes are provided for +deleted+ and +not_deleted+.   The standard +all+ scope is not polluted, so will still
+return all records, deleted or not.
+
+Examples:
+
+Author: Michael Kintzer
+
+== Examples
+
+* Migrate your model to add +deleted+ and +deleted_at+ attributes.   There are helpers provided for this:
+
+create_table :mytable do |t|
+ t.soft_destroyable
+end
+
+change_table :mytable do |t|
+ t.soft_destroyable
+end
+
+* Annotate your model to be soft_destroyable
+
+  class Parent
+    has_many :children, :dependent => :restrict
+    has_many :animals, :dependent => :nullify
+    soft_destroyable
+
+* That's it!
+
+== Testing
+
+* make sure you have rails and sqlite gems installed.
+* rake test
+
+== Note on Patches/Pull Requests
+
+* Fork the project.
+* Make your feature addition or bug fix.
+* Add tests for it. This is important so I don't break it in a
+  future version unintentionally.
+* Commit, do not mess with rakefile, version, or history.
+  (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
+* Send me a pull request. Bonus points for topic branches.
+
+== Copyright
+
+Copyright (c) 2010-11 Michael Kintzer, released under the MIT license
