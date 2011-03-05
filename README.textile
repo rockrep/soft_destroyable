@@ -5,8 +5,8 @@ Allows one to annotate an ActiveRecord module as being soft_destroyable.
 
 == Why another soft_destroy implementation?
 
-This gem was inspired by <a href='https://github.com/technoweenie/acts_as_paranoid'>acts_as_paranoid</a> and
-<a href='https://github.com/goncalossilva/rails3_acts_as_paranoid'>rails3_acts_as_paranoid</a>, both of which are great gems.
+This gem was inspired by "acts_as_paranoid":http://github.com/technoweenie/acts_as_paranoid and
+"rails3_acts_as_paranoid":https://github.com/goncalossilva/rails3_acts_as_paranoid, both of which are great gems.
 I found that rails3_acts_as_paranoid did not handle associations the way I wanted (at least at the time I wrote this),
 so I wrote this implementation instead.   
 
