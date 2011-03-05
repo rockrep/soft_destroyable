@@ -24,17 +24,3 @@ Rake::RDocTask.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-begin
-  require 'jeweler'
-  Jeweler::Tasks.new do |gem|
-    gem.name = "soft_destroyable"
-    gem.summary = "Rails 3 ActiveRecord compatible soft destroy implementation"
-    gem.description = "Rails 3 ActiveRecord compatible soft destroy implementation supporting dependent associations"
-    gem.email = "rockrep@yahoo.com"
-    gem.homepage = "http://github.com/rockrep/soft_destroyable"
-    gem.authors = ["Michael Kintzer"]
-  end
-  Jeweler::GemcutterTasks.new
-rescue LoadError
-  puts "Jeweler (or a dependency) not available. Install it with: gem install jeweler"
-end
