@@ -1,4 +1,6 @@
 .bundle
 .rvmrc
 .idea
+*.gem
+pkg/*
 
