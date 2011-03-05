@@ -5,7 +5,7 @@
 
 Gem::Specification.new do |s|
   s.name = %q{soft_destroyable}
-  s.version = "0.1.0"
+  s.version = "0.1.1"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Michael Kintzer"]
@@ -13,12 +13,12 @@ Gem::Specification.new do |s|
   s.description = %q{Rails 3 ActiveRecord compatible soft destroy implementation supporting dependent associations}
   s.email = %q{rockrep@yahoo.com}
   s.extra_rdoc_files = [
-    "README"
+    "README.textile"
   ]
   s.files = [
     "Gemfile",
     "MIT-LICENSE",
-    "README",
+    "README.textile",
     "Rakefile",
     "VERSION",
     "init.rb",
@@ -26,7 +26,6 @@ Gem::Specification.new do |s|
     "lib/soft_destroyable.rb",
     "lib/soft_destroyable/is_soft_destroyable.rb",
     "lib/soft_destroyable/table_definition.rb",
-    "soft_destroyable-0.1.0.gem",
     "soft_destroyable.gemspec",
     "spec/support/soft_destroy_spec_helper.rb",
     "test/basic_test.rb",
@@ -75,8 +74,12 @@ Gem::Specification.new do |s|
       s.add_development_dependency(%q<sqlite3>, [">= 1.3.3"])
       s.add_development_dependency(%q<rails>, [">= 3.0"])
       s.add_development_dependency(%q<sqlite3>, [">= 1.3.3"])
+      s.add_development_dependency(%q<rails>, [">= 3.0"])
+      s.add_development_dependency(%q<sqlite3>, [">= 1.3.3"])
     else
       s.add_dependency(%q<soft_destroyable>, [">= 0"])
+      s.add_dependency(%q<rails>, [">= 3.0"])
+      s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
       s.add_dependency(%q<rails>, [">= 3.0"])
       s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
       s.add_dependency(%q<rails>, [">= 3.0"])
@@ -88,6 +91,8 @@ Gem::Specification.new do |s|
     end
   else
     s.add_dependency(%q<soft_destroyable>, [">= 0"])
+    s.add_dependency(%q<rails>, [">= 3.0"])
+    s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
     s.add_dependency(%q<rails>, [">= 3.0"])
     s.add_dependency(%q<sqlite3>, [">= 1.3.3"])
     s.add_dependency(%q<rails>, [">= 3.0"])
