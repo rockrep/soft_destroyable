@@ -58,7 +58,7 @@ Gem::Specification.new do |s|
     "test/test_helper.rb",
     "test/through_associations_test.rb"
   ]
-  s.add_runtime_dependency "rails", "~>3.0"
+  s.add_runtime_dependency "activerecord", "~>3.0"
 
   if s.respond_to? :specification_version then
     current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
@@ -68,6 +68,6 @@ Gem::Specification.new do |s|
     else
     end
   else
-  end
+ end
 end
 
