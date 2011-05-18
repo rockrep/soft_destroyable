@@ -21,7 +21,7 @@ and +before_destroy!+ on your soft_destroyable models.
 
 Standard ActiveRecord dependent options :destroy, :restrict, :nullify, :delete_all, and :delete are supported and will
 behave as expected.  +revive+ will _not_ undo the effects of +nullify+, +delete_all+, and +delete+.
-+restrict+ is _not_ effected by the +deleted?+ state.  In other words, deleted child models will still restrict
++restrict+ is effected by the +deleted?+ state.  In other words, deleted child models will not raise a restriction when
 destroying the parent.
 
 The +delete+ operation is _not_ modified by this module.
