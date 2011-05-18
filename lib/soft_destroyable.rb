@@ -229,7 +229,7 @@ module SoftDestroyable
         when :has_many
           restrict_on_non_empty_has_many(reflection, association)
         when :has_one
-          restrict_on_nil_has_one(reflection, association)
+          restrict_on_non_nil_has_one(reflection, association)
         else
       end
     end
@@ -278,11 +278,21 @@ module SoftDestroyable
 
     def restrict_on_non_empty_has_many(reflection, association)
       return unless association
-      raise ActiveRecord::DeleteRestrictionError.new(reflection) if !association.empty?
+      association.each {|assoc_obj|
+        if assoc_obj.respond_to?(:deleted?)
+          raise ActiveRecord::DeleteRestrictionError.new(reflection) if !assoc_obj.deleted?
+        else
+          raise ActiveRecord::DeleteRestrictionError.new(reflection)
+        end
+      }
     end
 
-    def restrict_on_nil_has_one(reflection, association)
-      raise ActiveRecord::DeleteRestrictionError.new(reflection) if !association.nil?
+    def restrict_on_non_nil_has_one(reflection, association)
+      if association.respond_to?(:deleted?)
+        raise ActiveRecord::DeleteRestrictionError.new(reflection) if !association.nil? && !association.deleted?
+      else
+        raise ActiveRecord::DeleteRestrictionError.new(reflection) if !association.nil?
+      end
     end
 
   end
