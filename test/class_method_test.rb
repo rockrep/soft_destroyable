@@ -40,6 +40,11 @@ class ClassMethodTest < Test::Unit::TestCase
     assert Parent.soft_dependencies.include? :parent_nickname   
   end
 
+  def test_soft_dependency_order
+    # verify has_one dependencies are evaluated before has_many
+    assert Parent.soft_dependencies.index(:soft_one) < Parent.soft_dependencies.index(:soft_children)
+  end
+
   def test_restrict_dependencies
     assert_equal 4, Parent.restrict_dependencies.count
 

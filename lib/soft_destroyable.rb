@@ -57,7 +57,7 @@ module SoftDestroyable
     # returns an array of association symbols that must be managed by soft_destroyable on
     # destroy and destroy!
     def soft_dependencies
-      has_many_dependencies + has_one_dependencies
+      has_one_dependencies + has_many_dependencies
     end
 
     def restrict_dependencies
