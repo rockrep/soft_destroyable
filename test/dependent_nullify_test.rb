@@ -93,4 +93,39 @@ class DependentNullifyTest < Test::Unit::TestCase
     assert_nil bambam.reload.parent
   end
 
+  # revive
+
+  def test_revive_does_not_nullify_has_many_nullify_soft_children
+    @fred.destroy
+    @fred.soft_nullify_children << pebbles = SoftNullifyChild.new(:name => "pebbles")
+    assert_equal @fred, pebbles.reload.parent
+    @fred.revive
+    assert_equal @fred, pebbles.reload.parent
+  end
+
+  def test_revive_does_not_nullify_has_many_nullify_children
+    @fred.destroy
+    @fred.nullify_children << pebbles = NullifyChild.new(:name => "pebbles")
+    assert_equal @fred, pebbles.reload.parent
+    @fred.revive
+    assert_equal @fred, pebbles.reload.parent
+  end
+
+  def test_revive_does_not_nullify_has_soft_nullify_ones
+    @fred.destroy
+    @fred.soft_nullify_one = bambam = SoftNullifyOne.new(:name => "bambam")
+    assert_equal bambam, @fred.reload.soft_nullify_one
+    @fred.revive
+    assert_equal bambam, @fred.reload.soft_nullify_one
+  end
+
+  def test_revive_does_not_nullify_has_nullify_ones
+    @fred.destroy
+    @fred.nullify_one = bambam = NullifyOne.new(:name => "bambam")
+    assert_equal bambam, @fred.reload.nullify_one
+    @fred.revive
+    assert_equal bambam, @fred.reload.nullify_one
+  end
+
+
 end

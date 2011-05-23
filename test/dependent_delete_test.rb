@@ -46,4 +46,22 @@ class DependentDeleteTest < Test::Unit::TestCase
     assert_equal 0, DeleteOne.where(:name => "pebbles", :parent_id => @fred.id).count
   end
 
+  # revive
+
+  def test_revive_does_not_delete_all_has_one_soft_delete_one
+    @fred.destroy
+    @fred.soft_delete_one = bambam = SoftDeleteOne.new(:name => "bambam")
+    assert_equal bambam, @fred.reload.soft_delete_one
+    @fred.revive
+    assert_equal bambam, @fred.reload.soft_delete_one
+  end
+
+  def test_revive_does_not_delete_all_has_one_delete_one
+    @fred.destroy
+    @fred.delete_one = bambam = DeleteOne.new(:name => "bambam")
+    assert_equal bambam, @fred.reload.delete_one
+    @fred.revive
+    assert_equal bambam, @fred.reload.delete_one
+  end
+
 end

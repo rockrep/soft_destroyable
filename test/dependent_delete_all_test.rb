@@ -52,4 +52,26 @@ class DependentDeleteAllTest < Test::Unit::TestCase
     assert_equal 0, SoftDeleteAllChild.where(:name => "bambam", :parent_id => @fred.id).count
   end
 
+  # revive
+
+  def test_revive_does_not_delete_all_has_many_delete_all_soft_children
+    @fred.destroy
+    assert_equal true, @fred.deleted?
+    @fred.soft_delete_all_children << dino = SoftDeleteAllChild.new(:name => "dino")
+    assert_equal 1, @fred.reload.soft_delete_all_children.count
+    @fred.revive
+    assert_equal false, @fred.deleted?
+    assert_equal 1, SoftDeleteAllChild.where(:name => "dino", :parent_id => @fred.id).count
+  end
+
+  def test_revive_does_not_delete_all_has_many_delete_all_children
+    @fred.destroy
+    assert_equal true, @fred.deleted?
+    @fred.delete_all_children << dino = DeleteAllChild.new(:name => "dino")
+    assert_equal 1, @fred.reload.delete_all_children.count
+    @fred.revive
+    assert_equal false, @fred.deleted?
+    assert_equal 1, DeleteAllChild.where(:name => "dino", :parent_id => @fred.id).count
+  end
+
 end

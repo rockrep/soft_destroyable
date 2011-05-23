@@ -92,4 +92,33 @@ class DependentDestroyTest < Test::Unit::TestCase
     assert_nil One.find_by_name("bambam")
   end
 
+  # revive
+
+  def test_revive_has_many_soft_children
+    @fred.soft_children << pebbles = SoftChild.new(:name => "pebbles")
+    @fred.soft_children << bambam = SoftChild.new(:name => "bambam")
+    assert_equal @fred.reload.soft_children.count, 2
+    @fred.destroy
+    assert_equal @fred.deleted?, true
+    assert_equal pebbles.reload.deleted?, true
+    assert_equal bambam.reload.deleted?, true
+    @fred.soft_children << dino = SoftChild.new(:name => "dino")
+    @fred.revive
+    assert_equal @fred.deleted?, false
+    assert_equal pebbles.reload.deleted?, false
+    assert_equal bambam.reload.deleted?, false
+    assert_equal dino.reload.deleted?, false
+  end
+
+  def test_revive_has_soft_ones
+    @fred.soft_one = bambam = SoftOne.new(:name => "bambam")
+    assert_equal @fred.reload.soft_one, SoftOne.where(:name => "bambam", :parent_id => @fred.id).first
+    @fred.destroy
+    assert_equal @fred.deleted?, true
+    assert_equal SoftOne.where(:name => "bambam").first.deleted?, true
+    @fred.revive
+    assert_equal @fred.deleted?, false
+    assert_equal SoftOne.where(:name => "bambam").first.deleted?, false
+  end
+
 end

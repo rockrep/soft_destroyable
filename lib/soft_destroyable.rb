@@ -5,7 +5,7 @@ require "#{File.dirname(__FILE__)}/soft_destroyable/is_soft_destroyable"
 #
 # This changes the behavior of the +destroy+ method to being a soft-destroy, which
 # will set the +deleted_at+ attribute to <tt>Time.now</tt>, and the +deleted+ attribute to <tt>true</tt>
-# It exposes the +revive+ method to reverse the effects of +destroy+.
+# It exposes the +revive+ method to reverse the effects of +destroy+ (for :dependent => :destroy associations only).
 # It also exposes the +destroy!+ method which can be used to <b>really</b> destroy an object and it's associations.
 #
 # Standard ActiveRecord destroy callbacks are _not_ called, however you can override +before_soft_destroy+, +after_soft_destroy+,
@@ -179,16 +179,17 @@ module SoftDestroyable
     end
 
     def cascade_revive
-      cascade_to_soft_dependents { |assoc_obj|
+      cascade_to_soft_dependents(true) { |assoc_obj|
         assoc_obj.revive if assoc_obj.respond_to?(:revive)
       }
     end
 
-    def cascade_to_soft_dependents(&block)
+    # cascade of revive only applied to :dependent => :destroy associations
+    def cascade_to_soft_dependents(reviving = false, &block)
       return unless block_given?
 
       # fail fast on :dependent => :restrict
-      restrict_dependencies.each { |assoc_sym| handle_restrict(assoc_sym) }
+      restrict_dependencies.each { |assoc_sym| handle_restrict(assoc_sym) } unless reviving
 
       non_restrict_dependencies.each do |assoc_sym|
         reflection  = reflection_for(assoc_sym)
@@ -198,11 +199,11 @@ module SoftDestroyable
           when :destroy
             handle_destroy(reflection, association, &block)
           when :nullify
-            handle_nullify(reflection, association)
+            handle_nullify(reflection, association) unless reviving
           when :delete_all
-            handle_delete_all(reflection, association)
+            handle_delete_all(reflection, association) unless reviving
           when :delete
-            handle_delete(reflection, association)
+            handle_delete(reflection, association) unless reviving
           else
         end
 
