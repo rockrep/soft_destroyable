@@ -152,5 +152,54 @@ class DependentRestrictTest < Test::Unit::TestCase
     assert_equal false, @fred.deleted?
     assert_not_nil RestrictOne.find_by_name("bambam")
   end
-
+  
+  # revive
+  
+  def test_revive_has_many_restrict_children_not_empty
+    #pending
+    #assert_can_revive do
+    #  @fred.restrict_children << pebbles = RestrictChild.new(:name => "pebbles")
+    #  assert_equal pebbles, @fred.restrict_children.first
+    #end
+  end
+  
+  def test_revive_has_many_restrict_soft_children_not_all_deleted
+    #pending
+    #assert_can_revive do
+    #  @fred.soft_restrict_children << pebbles = SoftRestrictChild.new(:name => "pebbles")
+    #  assert_equal pebbles, @fred.soft_restrict_children.first
+    #end
+  end
+  
+  def test_revive_has_restrict_ones_not_nil
+    #pending
+    #assert_can_revive do
+    #  @fred.restrict_one = bambam = RestrictOne.new(:name => "bambam")
+    #  assert_equal bambam, @fred.restrict_one
+    #end
+  end
+  
+  def test_revive_has_soft_restrict_ones_not_deleted
+    #pending
+    #assert_can_revive do
+    #  @fred.soft_restrict_one = bambam = SoftRestrictOne.new(:name => "bambam")
+    #  assert_equal bambam, @fred.soft_restrict_one
+    #end
+  end
+  
+  private
+  
+  def assert_can_revive
+    assert_equal true, @fred.destroy
+    yield if block_given?
+    # assert_not_raise ActiveRecord::DeleteRestrictionError do
+      @fred.revive
+    # end
+    assert_equal false, @fred.deleted?
+  end
+  
+  def assert_true value
+    assert_equal true, value
+  end
+  
 end
