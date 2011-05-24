@@ -12,7 +12,7 @@ class ClassMethodTest < Test::Unit::TestCase
   end
 
   def test_soft_dependencies
-    assert_equal 20, Parent.soft_dependencies.count
+    assert_equal 21, Parent.soft_dependencies.count
 
     assert Parent.soft_dependencies.include? :soft_children
     assert Parent.soft_dependencies.include? :children
@@ -37,7 +37,9 @@ class ClassMethodTest < Test::Unit::TestCase
     assert Parent.soft_dependencies.include? :soft_parent_sports
     assert Parent.soft_dependencies.include? :parent_sports
     assert Parent.soft_dependencies.include? :soft_parent_nickname
-    assert Parent.soft_dependencies.include? :parent_nickname   
+    assert Parent.soft_dependencies.include? :parent_nickname
+
+    assert Parent.soft_dependencies.include? :soft_no_revive_with_parent_attribute_children
   end
 
   def test_soft_dependency_order

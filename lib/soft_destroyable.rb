@@ -8,6 +8,9 @@ require "#{File.dirname(__FILE__)}/soft_destroyable/is_soft_destroyable"
 # It exposes the +revive+ method to reverse the effects of +destroy+ (for :dependent => :destroy associations only).
 # It also exposes the +destroy!+ method which can be used to <b>really</b> destroy an object and it's associations.
 #
+# +revive+ will not cascade revive child associations which have been destroyed by actions other a destroy of the parent.
+# This requires the column attribute +revive_with_parent+.
+#
 # Standard ActiveRecord destroy callbacks are _not_ called, however you can override +before_soft_destroy+, +after_soft_destroy+,
 # and +before_destroy!+ on your soft_destroyable models.
 #
@@ -109,7 +112,9 @@ module SoftDestroyable
     def revive
       transaction do
         cascade_revive
-        update_attributes(:deleted_at => nil, :deleted => false)
+        update_hash = {:deleted_at => nil, :deleted => false}
+        update_hash[:revive_with_parent] = true if respond_to?(:revive_with_parent)
+        update_attributes(update_hash)
       end
     end
 
@@ -153,7 +158,13 @@ module SoftDestroyable
       cascade_to_soft_dependents { |assoc_obj|
         if assoc_obj.respond_to?(:destroy) && assoc_obj.respond_to?(:revive)
           wrap_with_callbacks(assoc_obj, "soft_destroy") do
-            assoc_obj.destroy
+            if assoc_obj.deleted? && assoc_obj.respond_to?(:revive_with_parent?)
+              # if assoc_obj already deleted, and we are cascading a delete, just update the attribute revive_with_parent to false
+              # so we know not to revive this object on a cascade of revive
+              assoc_obj.update_attributes(:revive_with_parent => false)
+            else
+              assoc_obj.destroy
+            end
           end
         else
           wrap_with_callbacks(assoc_obj, "soft_destroy") do
@@ -180,7 +191,8 @@ module SoftDestroyable
 
     def cascade_revive
       cascade_to_soft_dependents(true) { |assoc_obj|
-        assoc_obj.revive if assoc_obj.respond_to?(:revive)
+        assoc_obj.revive if assoc_obj.respond_to?(:revive) && (!assoc_obj.respond_to?(:revive_with_parent?) ||
+            assoc_obj.revive_with_parent?)
       }
     end
 
@@ -192,7 +204,7 @@ module SoftDestroyable
       restrict_dependencies.each { |assoc_sym| handle_restrict(assoc_sym) } unless reviving
 
       non_restrict_dependencies.each do |assoc_sym|
-        reflection  = reflection_for(assoc_sym)
+        reflection = reflection_for(assoc_sym)
         association = send(reflection.name)
 
         case reflection.options[:dependent]
@@ -224,7 +236,7 @@ module SoftDestroyable
     end
 
     def handle_restrict(assoc_sym)
-      reflection  = reflection_for(assoc_sym)
+      reflection = reflection_for(assoc_sym)
       association = send(reflection.name)
       case reflection.macro
         when :has_many
@@ -279,7 +291,7 @@ module SoftDestroyable
 
     def restrict_on_non_empty_has_many(reflection, association)
       return unless association
-      association.each {|assoc_obj|
+      association.each { |assoc_obj|
         if assoc_obj.respond_to?(:deleted?)
           raise ActiveRecord::DeleteRestrictionError.new(reflection) if !assoc_obj.deleted?
         else

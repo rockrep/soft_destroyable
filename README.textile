@@ -13,8 +13,11 @@ h3. Details
 
 This changes the behavior of the +destroy+ method to become a soft-destroy, which
 will set the +deleted_at+ attribute to <tt>Time.now</tt>, and the +deleted+ attribute to <tt>true</tt>
-It exposes the +revive+ method to reverse the effects of +destroy+.
+It exposes the +revive+ method to reverse the effects of +destroy+ (for :dependent => :destroy associations only).
 It also exposes the +destroy!+ method which can be used to <b>really</b> destroy an object and it's associations.
+
++revive+ will not revive child associations which have been destroyed by actions other a destroy of the parent.
+This requires the column attribute +revive_with_parent+.
 
 Standard ActiveRecord destroy callbacks are _not_ called, however you can override +before_soft_destroy+, +after_soft_destroy+,
 and +before_destroy!+ on your soft_destroyable models.
@@ -83,6 +86,10 @@ h3. Note on Patches/Pull Requests
   (if you want to have your own version, that is fine but bump version in a commit by itself I can ignore when I pull)
 * Send me a pull request
 
-h3. Copyright
+h3. Contributors
+
+* "Mack Talcott":https://github.com/mtalcott
+
+ h3. Copyright
 
 Copyright (c) 2010-11 Michael Kintzer, released under the MIT license

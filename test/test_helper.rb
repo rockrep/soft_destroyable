@@ -190,6 +190,14 @@ def setup_db
       t.references :callback_parent
     end
 
+    # used to test behavior of soft_destroy migration without revive_with_parent column
+    create_table :soft_no_revive_with_parent_attribute_children do |t|
+      t.string :name
+      t.references :parent
+      t.boolean :deleted, :default => false
+      t.datetime :deleted_at
+    end
+
     # todo: HasAndBelongsToMany?
   end
 end
@@ -235,6 +243,8 @@ class Parent < ActiveRecord::Base
   has_many :delete_all_children, :dependent => :delete_all
   has_one :soft_delete_one, :dependent => :delete
   has_one :delete_one, :dependent => :delete
+
+  has_many :soft_no_revive_with_parent_attribute_children, :dependent => :destroy
 
   soft_destroyable
 end
@@ -392,4 +402,9 @@ class CallbackChild < ActiveRecord::Base
   def before_destroy!
     raise PreventDestroyBangError.new
   end
+end
+
+class SoftNoReviveWithParentAttributeChild < ActiveRecord::Base
+  belongs_to :parent
+  soft_destroyable
 end
